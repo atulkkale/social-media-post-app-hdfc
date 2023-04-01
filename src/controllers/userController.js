@@ -1,6 +1,7 @@
 const utils = require('../helpers/utils');
 const Joi = require('joi');
 const User = require('../models/user');
+const mongoose = require('mongoose');
 
 exports.createUser = async (req, res) => {
   try {
@@ -32,7 +33,9 @@ exports.createUser = async (req, res) => {
     }
     // Create User
     await User.create(req.body);
-    res.status(200).json({ result: 'User created successfully' });
+    return res
+      .status(200)
+      .json(utils.responseMsg(null, true, 'User created successfully'));
   } catch (error) {
     console.log(error);
     return res.status(500).json(utils.responseMsg(error.message));
@@ -40,5 +43,20 @@ exports.createUser = async (req, res) => {
 };
 
 exports.getUserInfo = async (req, res) => {
-  res.json({ message: 'User info fetched successfully' });
+  try {
+    // Validation
+    const { user_id: id } = req.params;
+    console.log(req.params);
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId)
+      return res.status(403).json(utils.responseMsg('Invalid Request Id!'));
+    // Fetching user info
+    const user = await User.findOne({ _id: id });
+    if (!user)
+      return res.status(404).json(utils.responseMsg('User not found!'));
+    return res.json(utils.responseMsg(null, true, user));
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(utils.responseMsg(error.message));
+  }
 };
