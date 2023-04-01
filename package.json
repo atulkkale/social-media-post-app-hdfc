@@ -1,0 +1,26 @@
+{
+  "name": "social-media-post-app",
+  "version": "1.0.0",
+  "description": "This is social media post app allows users the create new posts.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atulkkale/social-media-post-app.git"
+  },
+  "author": "Atul Kale",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/atulkkale/social-media-post-app/issues"
+  },
+  "homepage": "https://github.com/atulkkale/social-media-post-app#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv-flow": "^3.2.0",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.3"
+  }
+}
