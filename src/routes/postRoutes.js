@@ -33,7 +33,7 @@ const passport = require('passport');
  * @swagger
  * /post/{post_id}:
  *  put:
- *    summary: Update the post message
+ *    summary: Update the post
  *    tags: [Posts]
  *    parameters:
  *      - in: path
@@ -94,7 +94,7 @@ router.put(
  * @swagger
  * /post/{post_id}:
  *  delete:
- *    summary: Delete the post message
+ *    summary: Delete the post
  *    tags: [Posts]
  *    parameters:
  *      - in: path

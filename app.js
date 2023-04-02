@@ -28,6 +28,9 @@ const swaggerOptions = {
     },
     servers: [
       {
+        url: 'https://dull-lion-bedclothes.cyclic.app/',
+      },
+      {
         url: 'http://localhost:3000/',
       },
     ],
