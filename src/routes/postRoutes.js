@@ -3,7 +3,7 @@ const {
   updatePost,
   deletePost,
   getAllPosts,
-} = require('../controllers/taskController');
+} = require('../controllers/postController');
 const passport = require('passport');
 
 router.put(

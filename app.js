@@ -9,7 +9,7 @@ dotenvFlow.config();
 console.log(' Current Environment ===>', process.env.NODE_ENV);
 
 //Local Modules
-const { createPost } = require('./src/controllers/taskController');
+const { createPost } = require('./src/controllers/postController');
 const userRoutes = require('./src/routes/userRoutes');
 const postRoutes = require('./src/routes/postRoutes');
 const authRoutes = require('./src/routes/authRoutes');
