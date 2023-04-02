@@ -28,6 +28,7 @@ exports.createUser = async (req, res) => {
       return res.status(403).json(utils.responseMsg(validationResult));
     }
     // Checking if user already exists
+    req.body.email = req.body.email.toLowerCase();
     const { email } = req.body;
     const hasUser = await User.findOne({ email: email });
     if (hasUser) {

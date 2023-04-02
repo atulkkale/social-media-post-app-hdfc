@@ -24,6 +24,7 @@ exports.login = async (req, res) => {
       return res.status(403).json(utils.responseMsg(validationResult));
     }
     // Log in
+    req.body.email = req.body.email.toLowerCase();
     const { email, password } = req.body;
     const user = await User.findOne({ email: email });
     if (!user) {

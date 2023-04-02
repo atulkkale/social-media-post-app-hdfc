@@ -4,15 +4,47 @@ const bodyParser = require('body-parser');
 const dotenvFlow = require('dotenv-flow');
 const cors = require('cors');
 const passport = require('passport');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
 
 dotenvFlow.config();
 console.log(' Current Environment ===>', process.env.NODE_ENV);
 
 //Local Modules
-const { createPost } = require('./src/controllers/postController');
+const createPostRoute = require('./src/routes/createPostRoute');
 const userRoutes = require('./src/routes/userRoutes');
 const postRoutes = require('./src/routes/postRoutes');
 const authRoutes = require('./src/routes/authRoutes');
+
+const swaggerOptions = {
+  failOnErrors: true,
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Social Media Post App Documentation',
+      version: '1.0.0',
+      description:
+        'This is social media post app allows users the create new posts.',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000/',
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+  },
+  apis: ['./src/routes/*.js'],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 // Passport.js initialization
 require('./src/services/authServices');
@@ -56,11 +88,10 @@ app.use(
 app.use('/user', userRoutes);
 app.use('/post', postRoutes);
 app.use('/auth', authRoutes);
-app.post(
-  '/:user_id/post',
-  passport.authenticate('jwt', { session: false }),
-  createPost
-);
+app.use('/', createPostRoute);
+
+/* Swagger api-docs Routes */
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 /* Handling invalid route */
 app.use('/', function (req, res) {
