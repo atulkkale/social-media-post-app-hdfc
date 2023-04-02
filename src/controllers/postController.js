@@ -116,5 +116,23 @@ exports.deletePost = async (req, res) => {
 };
 
 exports.getAllPosts = async (req, res) => {
-  res.json({ message: 'Posts fetched successfully' });
+  try {
+    // Validation
+    const { user_id } = req.params;
+    const { id } = req.user;
+    const isValidId = mongoose.Types.ObjectId.isValid(user_id);
+    if (!isValidId)
+      return res.status(403).json(utils.responseMsg('Invalid Request Id!'));
+    if (user_id !== id)
+      return res.status(403).json(utils.responseMsg('Enter your id!'));
+    // Get all posts
+    const posts = await Post.find(
+      { user_id: id },
+      { _id: 0, post_message: 1, previous_message: 1 }
+    ).populate({ path: 'previous_message', select: 'post_message -_id' });
+    return res.status(200).json(utils.responseMsg(null, true, posts));
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(utils.responseMsg(error.message));
+  }
 };

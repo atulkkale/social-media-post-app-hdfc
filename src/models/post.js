@@ -11,7 +11,12 @@ const postSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    previous_message: [mongoose.Schema.ObjectId],
+    previous_message: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Post',
+      },
+    ],
     is_active: {
       type: Boolean,
       required: true,
