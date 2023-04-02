@@ -85,7 +85,6 @@ exports.getUserInfo = async (req, res) => {
         },
       },
     ]);
-    console.log(user);
     if (!user.length)
       return res.status(404).json(utils.responseMsg('User not found!'));
     return res.json(utils.responseMsg(null, true, user));
