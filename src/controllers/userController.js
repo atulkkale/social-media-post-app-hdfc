@@ -48,13 +48,45 @@ exports.getUserInfo = async (req, res) => {
   try {
     // Validation
     const { user_id: id } = req.params;
-    console.log(req.params);
     const isValidId = mongoose.Types.ObjectId.isValid(id);
     if (!isValidId)
       return res.status(403).json(utils.responseMsg('Invalid Request Id!'));
     // Fetching user info
-    const user = await User.findOne({ _id: id });
-    if (!user)
+    const user = await User.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: 'roles',
+          localField: 'role_id',
+          foreignField: 'role_id',
+          as: 'role',
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: 1,
+          email: 1,
+          role_id: 1,
+          role_name: {
+            $let: {
+              vars: {
+                role: {
+                  $arrayElemAt: ['$role', 0],
+                },
+              },
+              in: '$$role.role_name',
+            },
+          },
+        },
+      },
+    ]);
+    console.log(user);
+    if (!user.length)
       return res.status(404).json(utils.responseMsg('User not found!'));
     return res.json(utils.responseMsg(null, true, user));
   } catch (error) {

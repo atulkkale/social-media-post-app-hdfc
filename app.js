@@ -56,7 +56,11 @@ app.use(
 app.use('/user', userRoutes);
 app.use('/post', postRoutes);
 app.use('/auth', authRoutes);
-app.post('/:user_id/post', createPost);
+app.post(
+  '/:user_id/post',
+  passport.authenticate('jwt', { session: false }),
+  createPost
+);
 
 /* Handling invalid route */
 app.use('/', function (req, res) {
