@@ -23,11 +23,14 @@ exports.createPost = async (req, res) => {
       return res.status(403).json(utils.responseMsg(validationResult));
     }
     // Collect previous messages if any
-    const previousMessages = await Post.find({ user_id: user_id }).sort({
+    const previousMessages = await Post.find(
+      { user_id: user_id },
+      { _id: 1 }
+    ).sort({
       createdAt: -1,
     });
     // Create post
-    const post = await Post.create({
+    await Post.create({
       user_id,
       ...req.body,
       previous_message: previousMessages,
