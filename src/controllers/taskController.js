@@ -9,7 +9,7 @@ exports.createPost = async (req, res) => {
     const { user_id: id } = req.params;
     const isValidId = mongoose.Types.ObjectId.isValid(id);
     if (!isValidId)
-      return res.status(403).send(utils.responseMsg('Invalid Request Id!'));
+      return res.status(403).json(utils.responseMsg('Invalid Request Id!'));
     const createPostSchema = Joi.object().keys({
       post_message: Joi.string().required(),
     });

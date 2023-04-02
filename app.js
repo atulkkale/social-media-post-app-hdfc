@@ -55,7 +55,7 @@ app.post('/:user_id/post', createPost);
 
 /* Handling invalid route */
 app.use('/', function (req, res) {
-  res.status(404).send('Route not found');
+  res.status(404).json('Route not found');
 });
 
 /**

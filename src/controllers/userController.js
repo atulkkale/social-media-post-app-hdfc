@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 
 exports.createUser = async (req, res) => {
   try {
+    // Edge case
+    if (req.body.password) req.body.password = String(req.body.password);
     // Validation
     const createUserSchema = Joi.object().keys({
       name: Joi.string().lowercase().min(2).max(20).required(),
