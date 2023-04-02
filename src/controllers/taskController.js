@@ -6,8 +6,8 @@ const Post = require('../models/post');
 exports.createPost = async (req, res) => {
   try {
     // Validation
-    const { user_id: id } = req.params;
-    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    const { user_id } = req.params;
+    const isValidId = mongoose.Types.ObjectId.isValid(user_id);
     if (!isValidId)
       return res.status(403).json(utils.responseMsg('Invalid Request Id!'));
     const createPostSchema = Joi.object().keys({
@@ -22,10 +22,18 @@ exports.createPost = async (req, res) => {
     if (validationResult) {
       return res.status(403).json(utils.responseMsg(validationResult));
     }
+    // Collect previous messages if any
+    const previousMessages = await Post.find({ user_id: user_id }).sort({
+      createdAt: -1,
+    });
     // Create post
-
-    // const post = await Post.create({user_id: id, ...req.body, })
-    res.json({ message: 'Post created successfully' });
+    const post = await Post.create({
+      user_id,
+      ...req.body,
+      previous_message: previousMessages,
+      is_active: 0,
+    });
+    return res.json({ message: 'Post created successfully' });
   } catch (error) {
     console.log(error);
     return res.status(500).json(utils.responseMsg(error.message));

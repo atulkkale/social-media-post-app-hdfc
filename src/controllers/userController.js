@@ -87,7 +87,7 @@ exports.getUserInfo = async (req, res) => {
     ]);
     if (!user.length)
       return res.status(404).json(utils.responseMsg('User not found!'));
-    return res.json(utils.responseMsg(null, true, user));
+    return res.status(200).json(utils.responseMsg(null, true, user));
   } catch (error) {
     console.log(error);
     return res.status(500).json(utils.responseMsg(error.message));
