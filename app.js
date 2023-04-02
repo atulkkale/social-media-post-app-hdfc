@@ -11,6 +11,7 @@ console.log(' Current Environment ===>', process.env.NODE_ENV);
 const { createPost } = require('./src/controllers/taskController');
 const userRoutes = require('./src/routes/userRoutes');
 const postRoutes = require('./src/routes/postRoutes');
+const authRoutes = require('./src/routes/authRoutes');
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use(
 /* Configuring Routes */
 app.use('/user', userRoutes);
 app.use('/post', postRoutes);
+app.use('/auth', authRoutes);
 app.post('/:user_id/post', createPost);
 
 /* Handling invalid route */
