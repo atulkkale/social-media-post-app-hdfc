@@ -4,11 +4,24 @@ const {
   deletePost,
   getAllPosts,
 } = require('../controllers/taskController');
+const passport = require('passport');
 
-router.put('/:post_id', updatePost);
+router.put(
+  '/:post_id',
+  passport.authenticate('jwt', { session: false }),
+  updatePost
+);
 
-router.delete('/:post_id', deletePost);
+router.delete(
+  '/:post_id',
+  passport.authenticate('jwt', { session: false }),
+  deletePost
+);
 
-router.get('/:user_id', getAllPosts);
+router.get(
+  '/:user_id',
+  passport.authenticate('jwt', { session: false }),
+  getAllPosts
+);
 
 module.exports = router;

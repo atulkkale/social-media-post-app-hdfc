@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dotenvFlow = require('dotenv-flow');
 const cors = require('cors');
+const passport = require('passport');
 
 dotenvFlow.config();
 console.log(' Current Environment ===>', process.env.NODE_ENV);
@@ -12,6 +13,10 @@ const { createPost } = require('./src/controllers/taskController');
 const userRoutes = require('./src/routes/userRoutes');
 const postRoutes = require('./src/routes/postRoutes');
 const authRoutes = require('./src/routes/authRoutes');
+
+// Passport.js initialization
+require('./src/services/authServices');
+passport.initialize();
 
 const app = express();
 
