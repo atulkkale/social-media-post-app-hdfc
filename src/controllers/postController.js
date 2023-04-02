@@ -37,7 +37,11 @@ exports.createPost = async (req, res) => {
       previous_message: previousMessages,
       is_active: 0,
     });
-    return res.status(200).json({ message: 'Post created successfully' });
+    return res
+      .status(200)
+      .json(
+        utils.responseMsg(null, true, { message: 'Post created successfully' })
+      );
   } catch (error) {
     console.log(error);
     return res.status(500).json(utils.responseMsg(error.message));
@@ -68,7 +72,9 @@ exports.updatePost = async (req, res) => {
       return res.status(404).json(utils.responseMsg('Post not found!'));
     post.post_message = req.body.post_message;
     await post.save();
-    return res.status(200).json(utils.responseMsg('Post updated successfully'));
+    return res
+      .status(200)
+      .json(utils.responseMsg(null, true, 'Post updated successfully'));
   } catch (error) {
     console.log(error);
     return res.status(500).json(utils.responseMsg(error.message));
@@ -76,7 +82,37 @@ exports.updatePost = async (req, res) => {
 };
 
 exports.deletePost = async (req, res) => {
-  res.json({ message: 'Post deleted successfully' });
+  try {
+    // Validation
+    const { post_id } = req.params;
+    const isValidId = mongoose.Types.ObjectId.isValid(post_id);
+    if (!isValidId)
+      return res.status(403).json(utils.responseMsg('Invalid Request Id!'));
+    // Delete post
+    const deletedPost = await Post.findOneAndDelete({
+      _id: post_id,
+      user_id: req.user._id,
+    });
+    if (!deletedPost)
+      return res.status(404).json(utils.responseMsg('Post not found!'));
+    // Delete all previous messages
+    await Post.updateMany(
+      {
+        user_id: req.user._id,
+      },
+      {
+        $pull: {
+          previous_message: {
+            $in: deletedPost._id,
+          },
+        },
+      }
+    );
+    return res.status(200).json(utils.responseMsg(null, true, 'Post deleted'));
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(utils.responseMsg(error.message));
+  }
 };
 
 exports.getAllPosts = async (req, res) => {
