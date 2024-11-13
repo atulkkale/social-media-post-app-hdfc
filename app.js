@@ -28,7 +28,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'https://dull-lion-bedclothes.cyclic.app/',
+        url: 'https://social-media-post-app-hdfc.onrender.com/',
       },
       {
         url: 'http://localhost:3000/',
